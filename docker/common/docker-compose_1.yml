@@ -1,0 +1,8 @@
+version: '2'
+services:
+  eurekaserver:
+     image:   manishasansol/tmx-eurekasvr:chapter4
+     ports:
+       - "8761:8761"
+
+
