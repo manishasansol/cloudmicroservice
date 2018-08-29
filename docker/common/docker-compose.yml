@@ -1,0 +1,103 @@
+version: '2'
+services:
+  eurekaserver:
+     image:   manishasansol/tmx-eurekasvr:chapter4
+     mem_limit: 1073741824
+     ports:
+       - "8761:8761"
+  #configserver:
+  #    image: manishasansol/tmx-confsvr:chapter4
+  #    ports:
+  #       - "8888:8888"
+  #    environment:
+  #       EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
+  #      EUREKASERVER_PORT: "8761"
+  #       ENCRYPT_KEY:       "IMSYMMETRIC"
+  # configserver2:
+  #     image: manishasansol/tmx-confsvr:chapter4
+  #     ports:
+  #        - "8889:8889"
+  #     links:
+  #         - "eurekaserver:eurekaserver"
+  #     environment:
+  #       EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
+  #       EUREKASERVER_PORT:8761
+  #       ENCRYPT_KEY:       "IMSYMMETRIC"
+  #database:
+   #   image: postgres:9.5
+    #  ports:
+     # - "5432:5432"
+      #environment:
+       # - POSTGRES_USER=postgres
+        #- POSTGRES_PASSWORD=p0stgr@s
+        #- POSTGRES_DB=eagle_eye_local
+  licensingservice:
+      image: manishasansol/tmx-licensing-service:chapter4
+      mem_limit: 1073741824
+      ports:
+        - "8080:8080"
+      links:
+        - "eurekaserver:eurekaserver"
+        - "zuulserver:zuulserver"
+      environment:
+        PROFILE: "default"
+        SERVER_PORT: "8080"
+        CONFIGSERVER_URI: "http://configserver:8888"
+        EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
+        EUREKASERVER_PORT:   "8761"
+        CONFIGSERVER_PORT:   "8888"
+        DATABASESERVER_PORT: "5432"
+        ENCRYPT_KEY:       "IMSYMMETRIC"
+  organizationservice:
+      image: manishasansol/tmx-organization-service:chapter4
+      mem_limit: 1073741824
+      ports:
+        - "8085:8085"
+      links:
+        - "eurekaserver:eurekaserver"
+        - "zuulserver:zuulserver"
+      environment:
+        PROFILE: "default"
+        SERVER_PORT: "8085"
+        CONFIGSERVER_URI: "http://configserver:8888"
+        EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
+        EUREKASERVER_PORT:   "8761"
+        CONFIGSERVER_PORT:   "8888"
+        DATABASESERVER_PORT: "5432"
+        ENCRYPT_KEY:       "IMSYMMETRIC"
+        EMAIL_ID: "organizationservice.com"
+  organizationservice2:
+      image: manishasansol/tmx-organization-service:chapter4
+      mem_limit: 1073741824
+      ports:
+        - "8086:8086"
+      links:
+        - "eurekaserver:eurekaserver"
+        - "zuulserver:zuulserver"
+      environment:
+        PROFILE: "default"
+        SERVER_PORT: "8085"
+        CONFIGSERVER_URI: "http://configserver:8888"
+        EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
+        EUREKASERVER_PORT:   "8761"
+        CONFIGSERVER_PORT:   "8888"
+        DATABASESERVER_PORT: "5432"
+        ENCRYPT_KEY:       "IMSYMMETRIC"
+        EMAIL_ID: "organizationservice2.com"
+  zuulserver:
+      image: manishasansol/tmx-zuulsvr:chapter4
+      mem_limit: 1073741824
+      ports:
+        - "5555:5555"
+      links:
+        - "eurekaserver:eurekaserver"
+      environment:
+        PROFILE: "default"
+        SERVER_PORT: "5555"
+        CONFIGSERVER_URI: "http://configserver:8888"
+        EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
+        EUREKASERVER_PORT:        "8761"
+        DATABASESERVER_PORT:      "5432"
+        CONFIGSERVER_PORT:        "8888"
+        ORGSERVERNEW_PORT:        "8087"
+
